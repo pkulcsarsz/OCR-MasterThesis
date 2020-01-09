@@ -6,7 +6,7 @@ import os
 import keras
 from keras.utils import plot_model
 
-def load_images(ifrom, ito, num_classes, addGaus = False):
+def load_images(dataset, ifrom, ito, num_classes, addGaus = False):
     letters = ["A", "B", "C", "D", "E" , "F", "G" , "H", "I", "J", "K", "L"
             , "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W",
             "X", "Y", "Z", "1" , "2", "3", "4", "5", "6", "7", "8", "9", "0"]
@@ -15,11 +15,11 @@ def load_images(ifrom, ito, num_classes, addGaus = False):
     i = 0
     for letter in letters:
         j = 0
-        for filename in os.listdir('data/' + letter):
+        for filename in os.listdir(dataset + '/' + letter):
             if j < ifrom or j > ito:
                 j = j + 1
                 continue
-            sample = cv2.imread("data/" + letter + "/" + filename,cv2.IMREAD_GRAYSCALE)
+            sample = cv2.imread(dataset +"/" + letter + "/" + filename,cv2.IMREAD_GRAYSCALE)
 
             if addGaus == True:
                 sample = addGausNoise(sample)
@@ -44,6 +44,3 @@ def addGausNoise(img, iterations = 1):
         result = cv2.add(result, gauss)
         iterations = iterations - 1
     return result
-
-def plotModel(model, fileName):
-    plot_model(model, to_file=fileName)
