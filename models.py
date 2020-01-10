@@ -1,16 +1,19 @@
-from keras.models import Sequential, model_from_json, Model
+from keras.models import Sequential, Model
 from keras.layers import Dense, Activation, Conv2D, Flatten, MaxPooling2D, Dropout, GlobalAveragePooling2D
 from keras.applications.resnet50 import ResNet50
-from os import path
+from keras.preprocessing.image import ImageDataGenerator
 import helpers
+import time
+from modelsHelpers import saveModel, loadModel, existsModelCache, createAndSaveCurves, getTrainDatasetPath, getValidationDatasetPath
 
-def mDummy1(input_shape, num_classes, x_train, y_train, x_valid, y_valid, steps_per_epoch, epochs, use_cache = False, dataset = 'dataset1'):
+def mDummy1(input_shape, num_classes, steps_per_epoch, epochs, use_cache = False, dataset = 'dataset1'):
     model_name = 'dummy1'
+    helpers.createFoldersForModel(model_name, dataset)
     print("===================== " + model_name + " model ====================")
     if existsModelCache(model_name, dataset) and use_cache :
         model = loadModel(model_name, dataset)
         model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-        evaluateModel(model, x_valid, y_valid)
+        evaluateModel(model, dataset, input_shape, steps_per_epoch, epochs)
         return model
 
     model = Sequential()
@@ -25,21 +28,24 @@ def mDummy1(input_shape, num_classes, x_train, y_train, x_valid, y_valid, steps_
     model.add(Activation("softmax"))
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-    model = fitAndEvaluate(model, steps_per_epoch, epochs, x_train, y_train, x_valid, y_valid)
+    [history, time_taken] = fitModel(model, dataset, input_shape, steps_per_epoch, epochs)
 
     if use_cache:
         saveModel(model, model_name, dataset)
 
+    createAndSaveCurves(history, model_name, dataset)
+
     return model
 
 
-def mLeNet(input_shape, num_classes, x_train, y_train, x_valid, y_valid, steps_per_epoch, epochs, use_cache = False, dataset = 'dataset1'):
+def mLeNet(input_shape, num_classes, steps_per_epoch, epochs, use_cache = False, dataset = 'dataset1'):
     model_name = 'LeNet'
+    helpers.createFoldersForModel(model_name, dataset)
     print("===================== " + model_name + " model ====================")
     if existsModelCache(model_name, dataset) and use_cache :
         model = loadModel(model_name, dataset)
         model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
-        evaluateModel(model, x_valid, y_valid)
+        evaluateModel(model, dataset, input_shape, steps_per_epoch, epochs)
         return model
         
     model = Sequential()
@@ -64,20 +70,25 @@ def mLeNet(input_shape, num_classes, x_train, y_train, x_valid, y_valid, steps_p
     model.add(Activation('softmax'))
     model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
-    model = fitAndEvaluate(model, steps_per_epoch, epochs, x_train, y_train, x_valid, y_valid)
+    # fitAndEvaluate(model, steps_per_epoch, epochs, x_train, y_train, x_valid, y_valid)
+
+    [history, time_taken] = fitModel(model, dataset, input_shape, steps_per_epoch, epochs)
 
     if use_cache:
         saveModel(model, model_name, dataset)
 
-    return model
+    createAndSaveCurves(history, model_name, dataset)
 
-def mResNet50(input_shape, num_classes, x_train, y_train, x_valid, y_valid, steps_per_epoch, epochs, use_cache = False, dataset = 'dataset1'):
+    return history
+
+def mResNet50(input_shape, num_classes, steps_per_epoch, epochs, use_cache = False, dataset = 'dataset1'):
     model_name = 'ResNet50'
+    helpers.createFoldersForModel(model_name, dataset)
     print("===================== " + model_name + " model ====================")
     if existsModelCache(model_name, dataset) and use_cache :
         model = loadModel(model_name, dataset)
         model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-        evaluateModel(model, x_valid, y_valid)
+        evaluateModel(model, dataset, input_shape, steps_per_epoch, epochs)
         return model
     
     base_model = ResNet50(weights=None, include_top=False, input_shape= input_shape)
@@ -88,60 +99,63 @@ def mResNet50(input_shape, num_classes, x_train, y_train, x_valid, y_valid, step
     model = Model(inputs = base_model.input, outputs = predictions)
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-    model = fitAndEvaluate(model, steps_per_epoch, epochs, x_train, y_train, x_valid, y_valid)
+    [history, time_taken] = fitModel(model, dataset, input_shape, steps_per_epoch, epochs)
 
+    print("Time taken, " + str(time_taken))
     if use_cache:
         saveModel(model, model_name, dataset)
 
-    return model
-
-
-def fitAndEvaluate(model, steps_per_epoch, epochs, x_train, y_train, x_valid, y_valid):
-    #Create history with fitting the data
-    print(model.summary())
-    fitModel(model, steps_per_epoch, epochs, x_train, y_train)
-    evaluateModel(model, x_valid, y_valid)
+    createAndSaveCurves(history, model_name, dataset)
 
     return model
 
-def fitModel(model, steps_per_epoch, epochs, x_train, y_train):
-    print("=================== Fitting the model ==================")
-    with helpers.Timer("Fitting"):
-        history = model.fit(x_train ,y_train, steps_per_epoch = steps_per_epoch, epochs = epochs)
 
+def fitModel(model, dataset, input_shape, steps_per_epoch, epochs):
+    train_datagen = ImageDataGenerator(
+        featurewise_center=True,
+        featurewise_std_normalization=True,
+        rescale=1. / 255,
+        shear_range=0.1,
+        zoom_range=0.1,
+        rotation_range=5,
+        width_shift_range=0.05,
+        height_shift_range=0.05,
+        horizontal_flip=False)
 
-def evaluateModel(model, x_valid, y_valid):
-    #Evaluate model
+    test_datagen = ImageDataGenerator(featurewise_center=True, featurewise_std_normalization=True, rescale=1. / 255)
+
+    train_generator = train_datagen.flow_from_directory(
+        getTrainDatasetPath(dataset),
+        target_size=(input_shape[0], input_shape[1]),
+        batch_size=steps_per_epoch,
+        class_mode='categorical')
+
+    validation_generator = test_datagen.flow_from_directory(
+        getValidationDatasetPath(dataset),
+        target_size=(input_shape[0], input_shape[1]),
+        batch_size=steps_per_epoch,
+        class_mode='categorical')
+    
+    start = time.time()
+    history = model.fit_generator(
+        train_generator,
+        steps_per_epoch=train_generator.samples / steps_per_epoch, 
+        epochs=epochs,
+        validation_data=validation_generator,
+        validation_steps=validation_generator.samples / steps_per_epoch) 
+
+    return [history, time.time() - start]
+
+def evaluateModel(model, dataset, input_shape, steps_per_epoch, epochs):
+    test_datagen = ImageDataGenerator(featurewise_center=True, featurewise_std_normalization=True, rescale=1. / 255)
+    validation_generator = test_datagen.flow_from_directory(
+        getValidationDatasetPath(dataset),
+        target_size=(input_shape[0], input_shape[1]),
+        batch_size=steps_per_epoch,
+        class_mode='categorical')
+
     print("================= Evaluating the model =================")
-    scores = model.evaluate(x_valid, y_valid)
+    scores = model.evaluate_generator(validation_generator)
     print("%s: %.2f" % (model.metrics_names[0], scores[0]))
     print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
-    return scores
 
-
-def saveModel(model, model_name, dataset):
-    model_json = model.to_json()
-    with open(getModelCachePath(model_name, dataset), "w") as json_file:
-        json_file.write(model_json)
-    # serialize weights to HDF5
-    model.save_weights(getModelWeightsCachePath(model_name, dataset))
-    print("Saved model to disk")
-
-def loadModel(model_name, dataset):
-    json_file = open(getModelCachePath(model_name, dataset), 'r')
-    loaded_model_json = json_file.read()
-    json_file.close()
-    loaded_model = model_from_json(loaded_model_json)
-    # load weights into new model
-    loaded_model.load_weights(getModelWeightsCachePath(model_name, dataset))
-    print("Loaded model from disk")
-    return loaded_model
-
-def getModelCachePath(model_name, dataset):
-    return 'cache/' + dataset + '/' + model_name + '.json'
-
-def getModelWeightsCachePath(model_name, dataset):
-    return 'cache/' + dataset + '/' + model_name + '.h5'
-
-def existsModelCache(model_name, dataset):
-    return path.exists(getModelCachePath(model_name, dataset)) and path.exists(getModelWeightsCachePath(model_name, dataset))
