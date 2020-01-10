@@ -1,0 +1,96 @@
+Found 3600 images belonging to 36 classes.
+Found 1080 images belonging to 36 classes.
+Epoch 1/40
+/home/pkulcsar/.virtualenvs/keras/lib/python3.6/site-packages/keras_preprocessing/image/image_data_generator.py:716: UserWarning: This ImageDataGenerator specifies `featurewise_center`, but it hasn't been fit on any training data. Fit it first by calling `.fit(numpy_data)`.
+  warnings.warn('This ImageDataGenerator specifies '
+/home/pkulcsar/.virtualenvs/keras/lib/python3.6/site-packages/keras_preprocessing/image/image_data_generator.py:724: UserWarning: This ImageDataGenerator specifies `featurewise_std_normalization`, but it hasn't been fit on any training data. Fit it first by calling `.fit(numpy_data)`.
+  warnings.warn('This ImageDataGenerator specifies '
+120/120 [==============================] - 256s 2s/step - loss: 6.4139 - accuracy: 0.0306 - val_loss: 4.8843 - val_accuracy: 0.0333
+Epoch 2/40
+120/120 [==============================] - 234s 2s/step - loss: 5.3869 - accuracy: 0.0281 - val_loss: 3.6346 - val_accuracy: 0.0241
+Epoch 3/40
+120/120 [==============================] - 235s 2s/step - loss: 5.4062 - accuracy: 0.0278 - val_loss: 4.2362 - val_accuracy: 0.0287
+Epoch 4/40
+120/120 [==============================] - 234s 2s/step - loss: 5.2292 - accuracy: 0.0306 - val_loss: 7.6129 - val_accuracy: 0.0269
+Epoch 5/40
+120/120 [==============================] - 234s 2s/step - loss: 5.3168 - accuracy: 0.0261 - val_loss: 13.6597 - val_accuracy: 0.0231
+Epoch 6/40
+120/120 [==============================] - 231s 2s/step - loss: 5.1263 - accuracy: 0.0294 - val_loss: 5.3885 - val_accuracy: 0.0287
+Epoch 7/40
+120/120 [==============================] - 231s 2s/step - loss: 5.1428 - accuracy: 0.0325 - val_loss: 11.8050 - val_accuracy: 0.0287
+Epoch 8/40
+120/120 [==============================] - 231s 2s/step - loss: 5.0249 - accuracy: 0.0314 - val_loss: 396.3969 - val_accuracy: 0.0296
+Epoch 9/40
+120/120 [==============================] - 231s 2s/step - loss: 4.9681 - accuracy: 0.0289 - val_loss: 3.5883 - val_accuracy: 0.0259
+Epoch 10/40
+120/120 [==============================] - 231s 2s/step - loss: 5.0055 - accuracy: 0.0292 - val_loss: 6.8663 - val_accuracy: 0.0287
+Epoch 11/40
+120/120 [==============================] - 231s 2s/step - loss: 4.9767 - accuracy: 0.0322 - val_loss: 14.9462 - val_accuracy: 0.0389
+Epoch 12/40
+120/120 [==============================] - 231s 2s/step - loss: 4.9176 - accuracy: 0.0275 - val_loss: 2717.9214 - val_accuracy: 0.0324
+Epoch 13/40
+120/120 [==============================] - 231s 2s/step - loss: 4.8498 - accuracy: 0.0308 - val_loss: 3.6461 - val_accuracy: 0.0250
+Epoch 14/40
+120/120 [==============================] - 232s 2s/step - loss: 4.9202 - accuracy: 0.0275 - val_loss: 3.6008 - val_accuracy: 0.0269
+Epoch 15/40
+120/120 [==============================] - 230s 2s/step - loss: 4.9078 - accuracy: 0.0308 - val_loss: 925.3168 - val_accuracy: 0.0231
+Epoch 16/40
+120/120 [==============================] - 231s 2s/step - loss: 4.8334 - accuracy: 0.0233 - val_loss: 4.2705 - val_accuracy: 0.0287
+Epoch 17/40
+120/120 [==============================] - 231s 2s/step - loss: 4.7181 - accuracy: 0.0275 - val_loss: 3.5865 - val_accuracy: 0.0269
+Epoch 18/40
+120/120 [==============================] - 231s 2s/step - loss: 4.7679 - accuracy: 0.0258 - val_loss: 123.2546 - val_accuracy: 0.0315
+Epoch 19/40
+120/120 [==============================] - 231s 2s/step - loss: 4.8032 - accuracy: 0.0350 - val_loss: 23.0396 - val_accuracy: 0.0306
+Epoch 20/40
+120/120 [==============================] - 231s 2s/step - loss: 4.7165 - accuracy: 0.0333 - val_loss: 3.8340 - val_accuracy: 0.0278
+Epoch 21/40
+120/120 [==============================] - 230s 2s/step - loss: 4.7155 - accuracy: 0.0281 - val_loss: 6.3749 - val_accuracy: 0.0259
+Epoch 22/40
+120/120 [==============================] - 231s 2s/step - loss: 4.6546 - accuracy: 0.0375 - val_loss: 3.5528 - val_accuracy: 0.0241
+Epoch 23/40
+120/120 [==============================] - 230s 2s/step - loss: 4.7255 - accuracy: 0.0372 - val_loss: 5.4949 - val_accuracy: 0.0278
+Epoch 24/40
+120/120 [==============================] - 231s 2s/step - loss: 4.7287 - accuracy: 0.0372 - val_loss: 3.5572 - val_accuracy: 0.0324
+Epoch 25/40
+120/120 [==============================] - 231s 2s/step - loss: 4.7730 - accuracy: 0.0344 - val_loss: 3.5604 - val_accuracy: 0.0398
+Epoch 26/40
+120/120 [==============================] - 230s 2s/step - loss: 4.6848 - accuracy: 0.0383 - val_loss: 201.4810 - val_accuracy: 0.0278
+Epoch 27/40
+120/120 [==============================] - 230s 2s/step - loss: 4.5878 - accuracy: 0.0369 - val_loss: 22.4828 - val_accuracy: 0.0333
+Epoch 28/40
+120/120 [==============================] - 231s 2s/step - loss: 4.6252 - accuracy: 0.0414 - val_loss: 3.5676 - val_accuracy: 0.0370
+Epoch 29/40
+120/120 [==============================] - 230s 2s/step - loss: 4.4983 - accuracy: 0.0408 - val_loss: 102.6503 - val_accuracy: 0.0296
+Epoch 30/40
+120/120 [==============================] - 231s 2s/step - loss: 4.5987 - accuracy: 0.0394 - val_loss: 3.5168 - val_accuracy: 0.0546
+Epoch 31/40
+120/120 [==============================] - 231s 2s/step - loss: 4.5597 - accuracy: 0.0442 - val_loss: 3.5102 - val_accuracy: 0.0417
+Epoch 32/40
+120/120 [==============================] - 230s 2s/step - loss: 4.5782 - accuracy: 0.0425 - val_loss: 12.5176 - val_accuracy: 0.0454
+Epoch 33/40
+120/120 [==============================] - 231s 2s/step - loss: 4.5335 - accuracy: 0.0406 - val_loss: 3.5015 - val_accuracy: 0.0231
+Epoch 34/40
+120/120 [==============================] - 230s 2s/step - loss: 4.6757 - accuracy: 0.0422 - val_loss: 3.4568 - val_accuracy: 0.0389
+Epoch 35/40
+120/120 [==============================] - 231s 2s/step - loss: 4.5092 - accuracy: 0.0431 - val_loss: 3.4915 - val_accuracy: 0.0370
+Epoch 36/40
+120/120 [==============================] - 230s 2s/step - loss: 4.5742 - accuracy: 0.0439 - val_loss: 3.2156 - val_accuracy: 0.0463
+Epoch 37/40
+120/120 [==============================] - 231s 2s/step - loss: 4.5881 - accuracy: 0.0406 - val_loss: 3.4304 - val_accuracy: 0.0463
+Epoch 38/40
+120/120 [==============================] - 231s 2s/step - loss: 4.4553 - accuracy: 0.0444 - val_loss: 17.8023 - val_accuracy: 0.0324
+Epoch 39/40
+120/120 [==============================] - 230s 2s/step - loss: 4.4866 - accuracy: 0.0453 - val_loss: 1195.5536 - val_accuracy: 0.0269
+Epoch 40/40
+120/120 [==============================] - 231s 2s/step - loss: 4.5083 - accuracy: 0.0503 - val_loss: 358.1420 - val_accuracy: 0.0454
+Time taken, 9313.220382452011
+Saved model to disk
+===================== ResNet50 model ====================
+WARNING:tensorflow:Large dropout rate: 0.7 (>0.5). In TensorFlow 2.x, dropout() uses dropout rate instead of keep_prob. Please ensure that this is intended.
+Loaded model from disk
+Found 1080 images belonging to 36 classes.
+================= Evaluating the model =================
+loss: 407.40
+accuracy: 4.54%
+
