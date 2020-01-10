@@ -1,10 +1,6 @@
 Found 3600 images belonging to 36 classes.
 Found 1080 images belonging to 36 classes.
 Epoch 1/40
-/home/pkulcsar/.virtualenvs/keras/lib/python3.6/site-packages/keras_preprocessing/image/image_data_generator.py:716: UserWarning: This ImageDataGenerator specifies `featurewise_center`, but it hasn't been fit on any training data. Fit it first by calling `.fit(numpy_data)`.
-  warnings.warn('This ImageDataGenerator specifies '
-/home/pkulcsar/.virtualenvs/keras/lib/python3.6/site-packages/keras_preprocessing/image/image_data_generator.py:724: UserWarning: This ImageDataGenerator specifies `featurewise_std_normalization`, but it hasn't been fit on any training data. Fit it first by calling `.fit(numpy_data)`.
-  warnings.warn('This ImageDataGenerator specifies '
 120/120 [==============================] - 256s 2s/step - loss: 6.4139 - accuracy: 0.0306 - val_loss: 4.8843 - val_accuracy: 0.0333
 Epoch 2/40
 120/120 [==============================] - 234s 2s/step - loss: 5.3869 - accuracy: 0.0281 - val_loss: 3.6346 - val_accuracy: 0.0241
