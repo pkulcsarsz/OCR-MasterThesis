@@ -22,27 +22,27 @@ inputShape = (32, 32, 3)
 # model = models.mResNet50(inputShape, num_classes, x_train, y_train, x_valid, y_valid, False)
 
 
-dataset = 'dataset1'
+# dataset = 'dataset1'
 
-model = models.mLeNet(inputShape, num_classes,
-        steps_per_epoch = 30, epochs = 100, use_cache=True, dataset=dataset)
+# model = models.mLeNet(inputShape, num_classes,
+#         steps_per_epoch = 30, epochs = 100, use_cache=True, dataset=dataset)
+
+
+# dataset = 'dataset2'
+
+# model = models.mLeNet(inputShape, num_classes,
+#         steps_per_epoch = 30, epochs = 100, use_cache=True, dataset=dataset)
 
 
 dataset = 'dataset2'
 
-model = models.mLeNet(inputShape, num_classes,
-        steps_per_epoch = 30, epochs = 100, use_cache=True, dataset=dataset)
-
-
-dataset = 'dataset2'
-
-model = models.mResNet50(inputShape, num_classes,
+model = models.mResNet50_2(inputShape, num_classes,
         steps_per_epoch = 30, epochs = 300, use_cache=True, dataset=dataset)
 
 
 dataset = 'dataset1'
 
-model = models.mResNet50(inputShape, num_classes,
+model = models.mResNet50_2(inputShape, num_classes,
         steps_per_epoch = 30, epochs = 300, use_cache=True, dataset=dataset)
 
 

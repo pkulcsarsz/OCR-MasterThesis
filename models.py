@@ -110,6 +110,35 @@ def mResNet50(input_shape, num_classes, steps_per_epoch, epochs, use_cache = Fal
     return model
 
 
+def mResNet50_2(input_shape, num_classes, steps_per_epoch, epochs, use_cache = False, dataset = 'dataset1'):
+    model_name = 'ResNet50_2'
+    helpers.createFoldersForModel(model_name, dataset)
+    print("===================== " + model_name + " model ====================")
+    if existsModelCache(model_name, dataset) and use_cache :
+        model = loadModel(model_name, dataset)
+        model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+        evaluateModel(model, dataset, input_shape, steps_per_epoch, epochs)
+        return model
+    
+    base_model = ResNet50(weights=None, include_top=False, input_shape= input_shape)
+    x = base_model.output
+    x = GlobalAveragePooling2D()(x)
+    x = Dropout(0.7)(x)
+    predictions = Dense(num_classes, activation= 'softmax')(x)
+    model = Model(inputs = base_model.input, outputs = predictions)
+    model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
+
+    [history, time_taken] = fitModel(model, dataset, input_shape, steps_per_epoch, epochs)
+
+    print("Time taken, " + str(time_taken))
+    if use_cache:
+        saveModel(model, model_name, dataset)
+
+    createAndSaveCurves(history, model_name, dataset)
+
+    return model
+
+
 def fitModel(model, dataset, input_shape, steps_per_epoch, epochs):
     train_datagen = ImageDataGenerator(
         featurewise_center=True,
