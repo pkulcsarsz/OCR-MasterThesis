@@ -1,5 +1,5 @@
 # Experiments with OCR using Deep Learning
-## Master thesis
+## Master thesis
 ### Comenius University in Bratislava, Faculty of Mathematics, Physicsand Informatics, Department of Applied Mathematics and Statistics
 
 This repositar contains all files for the master thesis. 
