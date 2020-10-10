@@ -6,11 +6,12 @@ import os
 import keras
 from keras.utils import plot_model
 
-def load_images(dataset, ifrom, ito, num_classes, addGaus = False):
+def load_images(dataset, ifrom, ito, num_classes, addGaus = False, addCharacteristics = False):
     letters = ["A", "B", "C", "D", "E" , "F", "G" , "H", "I", "J", "K", "L"
             , "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W",
             "X", "Y", "Z", "1" , "2", "3", "4", "5", "6", "7", "8", "9", "0"]
     x_data = []
+    # print(len(letters))
     y_data = []
     i = 0
     for letter in letters:
@@ -34,7 +35,22 @@ def load_images(dataset, ifrom, ito, num_classes, addGaus = False):
     x_data = np.array(x_data) / 255
     y_data = keras.utils.to_categorical(np.array(y_data),num_classes=num_classes)
 
+    if addCharacteristics:
+        y_data = addSpecToY(y_data)
+
     return[ x_data, y_data]
+
+
+def addSpecToY(y):
+    s = np.genfromtxt('characteristics.csv', delimiter=',')
+    r = np.zeros((y.shape[0],y.shape[1]+s.shape[1]))
+    r[:,:y.shape[1]] = y
+
+    for i in range(y.shape[1]):
+        r[r[:,i] == 1, y.shape[1]:] = s[i,:]
+
+    return r
+
 
 def addGausNoise(img, iterations = 1):
     result = img
