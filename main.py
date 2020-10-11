@@ -1,10 +1,14 @@
-# import data
+import data
 import models
 # from sklearn.model_selection import train_test_split
 
 # Define basic variables
 num_classes = 36
 inputShape = (32, 32, 3)
+
+# [X, Y] = data.load_images('dataset1/train', 0, 5, num_classes, False, True)
+
+# print(Y[0:3])
 
 # Load images
 # [X, Y] = data.load_images(dataset, 0, 20, num_classes)
@@ -34,18 +38,23 @@ inputShape = (32, 32, 3)
 #         steps_per_epoch = 30, epochs = 100, use_cache=True, dataset=dataset)
 
 
-dataset = 'dataset2'
+# dataset = 'dataset2'
 
-model = models.mResNet50_2(inputShape, num_classes,
-                           steps_per_epoch=30, epochs=300, use_cache=True, dataset=dataset)
+# model = models.mResNet50_2(inputShape, num_classes,
+#                            steps_per_epoch=30, epochs=300, use_cache=True, dataset=dataset)
 
 
-dataset = 'dataset1'
+# dataset = 'dataset1'
 
-model = models.mResNet50_2(inputShape, num_classes,
-                           steps_per_epoch=30, epochs=300, use_cache=True, dataset=dataset)
+# model = models.mResNet50_2(inputShape, num_classes,
+#                            steps_per_epoch=30, epochs=300, use_cache=True, dataset=dataset)
 
 
 # dataset = 'dataset2'
 # model = models.mResNet50(inputShape, num_classes,
 #         steps_per_epoch = 30, epochs = 40, use_cache=True, dataset=dataset)
+
+
+dataset = 'dataset2'
+model = models.customVGG(inputShape, num_classes,
+        steps_per_epoch = 30, epochs = 40, use_cache=True, dataset=dataset)

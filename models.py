@@ -4,7 +4,10 @@ from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
+<<<<<<< HEAD
 import tensorflow.keras.backend as K
+=======
+>>>>>>> 5e59f39660c0d939818a676ac7ccb5bcafb3a3fb
 import helpers
 import time
 from modelsHelpers import saveModel, loadModel, existsModelCache, createAndSaveCurves, getTrainDatasetPath, getValidationDatasetPath
@@ -31,7 +34,12 @@ def mDummy1(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, 
     model.add(Flatten())
     model.add(Dense(num_classes))
     model.add(Activation("softmax"))
+<<<<<<< HEAD
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+=======
+    model.compile(optimizer='adam',+
+                  loss='categorical_crossentropy', metrics=['accuracy'])
+>>>>>>> 5e59f39660c0d939818a676ac7ccb5bcafb3a3fb
 
     [history, time_taken] = fitModel(
         model, dataset, input_shape, steps_per_epoch, epochs)
@@ -177,12 +185,23 @@ def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False
 
 
     n = 10 # number of features
+<<<<<<< HEAD
     k = num_classes #number of classes
     cce = tf.keras.losses.CategoricalCrossentropy()
     def featuresLossFunction(y_true, y_pred):
     #toto treba ešte spraviť
         print("Shapes", y_true.shape, y_pred.shape)
         return K.mean(K.square(y_pred[:,0:n] - y_true[:,k:]))
+=======
+    k = 40 #number of classes
+    cce = tf.keras.losses.CategoricalCrossentropy()
+    def featuresLossFunction():
+        def flf(y_true, y_pred):
+        #toto treba ešte spraviť
+            print(y_pred, y_true)
+            return K.mean(K.square(y_pred[0:n] - y_true[k:]))
+        return flf
+>>>>>>> 5e59f39660c0d939818a676ac7ccb5bcafb3a3fb
 
     def customCCE(y_true, y_pred):
         return cce(y_true[0:k], y_pred).numpy()
