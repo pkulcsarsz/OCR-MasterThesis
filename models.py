@@ -1,7 +1,10 @@
-from keras.models import Sequential, Model
-from keras.layers import Dense, Activation, Conv2D, Flatten, MaxPooling2D, Dropout, GlobalAveragePooling2D
-from keras.applications.resnet50 import ResNet50
-from keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Activation, Conv2D, Flatten, MaxPooling2D, Dropout, GlobalAveragePooling2D
+from tensorflow.keras.applications.resnet50 import ResNet50
+from tensorflow.keras.applications.vgg16 import VGG16
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import tensorflow as tf
+import tensorflow.keras.backend as K
 import helpers
 import time
 from modelsHelpers import saveModel, loadModel, existsModelCache, createAndSaveCurves, getTrainDatasetPath, getValidationDatasetPath
@@ -28,8 +31,7 @@ def mDummy1(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, 
     model.add(Flatten())
     model.add(Dense(num_classes))
     model.add(Activation("softmax"))
-    model.compile(optimizer='adam',
-                  loss='categorical_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     [history, time_taken] = fitModel(
         model, dataset, input_shape, steps_per_epoch, epochs)
@@ -143,6 +145,57 @@ def mResNet50_2(input_shape, num_classes, steps_per_epoch, epochs, use_cache=Fal
     model = Model(inputs=base_model.input, outputs=predictions)
     model.compile(optimizer='rmsprop',
                   loss='categorical_crossentropy', metrics=['accuracy'])
+
+    [history, time_taken] = fitModel(
+        model, dataset, input_shape, steps_per_epoch, epochs)
+
+    print("Time taken, " + str(time_taken))
+    if use_cache:
+        saveModel(model, model_name, dataset)
+
+    createAndSaveCurves(history, model_name, dataset)
+
+    return model
+
+
+def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, dataset='dataset1'):
+    model_name = 'Custom_VGG'
+    helpers.createFoldersForModel(model_name, dataset)
+    print("===================== " + model_name + " model ====================")
+    # load model without classifier layers
+    model = VGG16(include_top=False, input_shape=input_shape)
+    # add new classifier layers
+    flat1 = Flatten()(model.layers[-1].output)
+    class1 = Dense(1024, activation='relu')(flat1)
+    output = Dense(num_classes, activation='softmax')(class1)
+
+
+    # define new model
+    model = Model(inputs=model.inputs, outputs=[output, flat1])
+    # summarize
+    model.summary()
+
+
+    n = 10 # number of features
+    k = num_classes #number of classes
+    cce = tf.keras.losses.CategoricalCrossentropy()
+    def featuresLossFunction(y_true, y_pred):
+    #toto treba ešte spraviť
+        print("Shapes", y_true.shape, y_pred.shape)
+        return K.mean(K.square(y_pred[:,0:n] - y_true[:,k:]))
+
+    def customCCE(y_true, y_pred):
+        return cce(y_true[0:k], y_pred).numpy()
+        
+
+    def customSPA(y_true,y_pred):
+        return tf.keras.metrics.sparse_categorical_accuracy(y_true[0:k], y_pred)
+
+    tf.executing_eagerly()
+
+
+    model.compile(loss=[customCCE, featuresLossFunction],  metrics=[customSPA], optimizer='adam', run_eagerly=True)
+    # model.run_eagerly = True
 
     [history, time_taken] = fitModel(
         model, dataset, input_shape, steps_per_epoch, epochs)
