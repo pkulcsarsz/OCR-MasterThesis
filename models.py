@@ -4,10 +4,7 @@ from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
-<<<<<<< HEAD
 import tensorflow.keras.backend as K
-=======
->>>>>>> 5e59f39660c0d939818a676ac7ccb5bcafb3a3fb
 import helpers
 import time
 from modelsHelpers import saveModel, loadModel, existsModelCache, createAndSaveCurves, getTrainDatasetPath, getValidationDatasetPath
@@ -37,12 +34,7 @@ def mDummy1(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, 
 <<<<<<< HEAD
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 =======
-    model.compile(optimizer='adam',+
                   loss='categorical_crossentropy', metrics=['accuracy'])
->>>>>>> 5e59f39660c0d939818a676ac7ccb5bcafb3a3fb
-
-    [history, time_taken] = fitModel(
-        model, dataset, input_shape, steps_per_epoch, epochs)
 
     if use_cache:
         saveModel(model, model_name, dataset)
