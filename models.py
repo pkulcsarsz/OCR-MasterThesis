@@ -7,7 +7,7 @@ import tensorflow as tf
 import helpers
 import time
 from modelsHelpers import saveModel, loadModel, existsModelCache, createAndSaveCurves, getTrainDatasetPath, getValidationDatasetPath
-
+from dataGenerator import load_data_using_tfdata
 
 def mDummy1(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, dataset='dataset1'):
     model_name = 'dummy1'
@@ -247,6 +247,22 @@ def fitModel(model, dataset, input_shape, steps_per_epoch, epochs):
         validation_steps=validation_generator.samples / steps_per_epoch)
 
     return [history, time.time() - start]
+
+
+def fitModelTFLoad(model, dataset, input_shape, steps_per_epoch, epochs):
+    data_generator = load_data_using_tfdata(dataset, ['train','validation'])
+
+    start = time.time()
+    history = model.fit_generator(
+        data_generator['train'],
+        steps_per_epoch=data_generator['train_count'] / steps_per_epoch,
+        epochs=epochs,
+        validation_data=data_generator['validation'],
+        validation_steps=data_generator['validation_count'] / steps_per_epoch)
+
+    return [history, time.time() - start]
+
+
 
 
 def evaluateModel(model, dataset, input_shape, steps_per_epoch, epochs):
