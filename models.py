@@ -178,13 +178,14 @@ def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False
     model.summary()
 
 
-    n = 10 # number of features
+    n = 13 # number of features
     k = num_classes #number of classes
+    print(num_classes)
     cce = tf.keras.losses.CategoricalCrossentropy()
     def featuresLossFunction(y_true, y_pred):
     #toto treba ešte spraviť
-        print("Shapes", y_true.shape, y_pred.shape)
-        return K.mean(K.square(y_pred[:,0:n] - y_true[:,k:]))
+        print("Shapes", y_pred.shape,y_true.shape, y_pred[:,:n].shape, y_true[:,k:].shape)
+        return K.mean(K.square(y_pred[:,:n] - y_true[:,k:]))
 
     def customCCE(y_true, y_pred):
         return cce(y_true[0:k], y_pred).numpy()
@@ -199,7 +200,7 @@ def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False
     model.compile(loss=[customCCE, featuresLossFunction],  metrics=[customSPA], optimizer='adam', run_eagerly=True)
     # model.run_eagerly = True
 
-    [history, time_taken] = fitModel(
+    [history, time_taken] = fitModelTFLoad(
         model, dataset, input_shape, steps_per_epoch, epochs)
 
     print("Time taken, " + str(time_taken))
@@ -268,7 +269,7 @@ def fitModelTFLoad(model, dataset, input_shape, steps_per_epoch, epochs):
 def evaluateModel(model, dataset, input_shape, steps_per_epoch, epochs):
     test_datagen = ImageDataGenerator(
         featurewise_center=True, featurewise_std_normalization=True, rescale=1. / 255)
-        validation_generator = test_datagen.flow_from_directory(
+    validation_generator = test_datagen.flow_from_directory(
         getValidationDatasetPath(dataset),
         target_size=(input_shape[0], input_shape[1]),
         batch_size=steps_per_epoch,

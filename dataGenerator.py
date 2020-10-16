@@ -18,10 +18,13 @@ def load_data_using_tfdata(dataset, input_shape, steps_per_epoch, folders, addCh
         # The second to last is the class-directory
         class_names.sort()
         label = parts[-2] == class_names
-        tf.dtypes.cast(label, tf.int8)
+        label = tf.dtypes.cast(label, tf.int8)
+        print("pars", parts)
+        print("class_names",class_names)
         if addCharacteristics:
             r = np.zeros((label.shape[0]+s.shape[1]))
-            r[:label.shape[0]] = label
+            print("This is not working",r,  r.shape, label.numpy(), label.numpy().shape)
+            r[:label.shape[0]] = label[:]
             r[label.shape[0]:] = s[label,:]
             label = r
         # load the raw data from the file as a string
