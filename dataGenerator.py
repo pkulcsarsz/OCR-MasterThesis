@@ -1,8 +1,9 @@
 
 import os
 import tensorflow as tf
+import numpy as np
 
-def load_data_using_tfdata(dataset, folders):
+def load_data_using_tfdata(dataset, input_shape, steps_per_epoch, folders, addCharacteristics):
     """
     Load the images in batches using Tensorflow (tfdata).
     Cache can be used to speed up the process.
@@ -15,7 +16,11 @@ def load_data_using_tfdata(dataset, folders):
         parts = tf.strings.split(file_path, os.path.sep)
         class_names = np.array(os.listdir(dir_path + '/train'))
         # The second to last is the class-directory
+        class_names.sort()
         label = parts[-2] == class_names
+        tf.dtypes.cast(label, tf.int8)
+        if addCharacteristics:
+            
         # load the raw data from the file as a string
         img = tf.io.read_file(file_path)
         # convert the compressed string to a 3D uint8 tensor
@@ -45,6 +50,8 @@ def load_data_using_tfdata(dataset, folders):
         return ds
 
     dir_path = dataset
+    img_dims = input_shape
+    batch_size = steps_per_epoch
 
     data_generator = {}
     for x in folders:

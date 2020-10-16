@@ -31,11 +31,13 @@ def mDummy1(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, 
     model.add(Flatten())
     model.add(Dense(num_classes))
     model.add(Activation("softmax"))
-<<<<<<< HEAD
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-=======
-                  loss='categorical_crossentropy', metrics=['accuracy'])
 
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+    [history, time_taken] = fitModelTFLoad(
+        model, dataset, input_shape, steps_per_epoch, epochs)
+
+    print("Time taken, " + str(time_taken))
     if use_cache:
         saveModel(model, model_name, dataset)
 
@@ -248,7 +250,7 @@ def fitModel(model, dataset, input_shape, steps_per_epoch, epochs):
 
 
 def fitModelTFLoad(model, dataset, input_shape, steps_per_epoch, epochs):
-    data_generator = load_data_using_tfdata(dataset, ['train','validation'])
+    data_generator = load_data_using_tfdata(dataset, input_shape, steps_per_epoch,['train','validation'])
 
     start = time.time()
     history = model.fit_generator(
@@ -266,7 +268,7 @@ def fitModelTFLoad(model, dataset, input_shape, steps_per_epoch, epochs):
 def evaluateModel(model, dataset, input_shape, steps_per_epoch, epochs):
     test_datagen = ImageDataGenerator(
         featurewise_center=True, featurewise_std_normalization=True, rescale=1. / 255)
-    validation_generator = test_datagen.flow_from_directory(
+        validation_generator = test_datagen.flow_from_directory(
         getValidationDatasetPath(dataset),
         target_size=(input_shape[0], input_shape[1]),
         batch_size=steps_per_epoch,
