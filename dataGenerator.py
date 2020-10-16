@@ -20,7 +20,10 @@ def load_data_using_tfdata(dataset, input_shape, steps_per_epoch, folders, addCh
         label = parts[-2] == class_names
         tf.dtypes.cast(label, tf.int8)
         if addCharacteristics:
-            
+            r = np.zeros((label.shape[0]+s.shape[1]))
+            r[:label.shape[0]] = label
+            r[label.shape[0]:] = s[label,:]
+            label = r
         # load the raw data from the file as a string
         img = tf.io.read_file(file_path)
         # convert the compressed string to a 3D uint8 tensor
@@ -52,6 +55,7 @@ def load_data_using_tfdata(dataset, input_shape, steps_per_epoch, folders, addCh
     dir_path = dataset
     img_dims = input_shape
     batch_size = steps_per_epoch
+    s = np.genfromtxt('characteristics2.csv', delimiter=',')
 
     data_generator = {}
     for x in folders:
