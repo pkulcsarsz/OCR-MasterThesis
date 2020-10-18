@@ -18,14 +18,11 @@ def load_data_using_tfdata(dataset, input_shape, steps_per_epoch, folders, addCh
         # The second to last is the class-directory
         class_names.sort()
         label = parts[-2] == class_names
-        label = tf.dtypes.cast(label, tf.int8)
-        print("pars", parts)
-        print("class_names",class_names)
+        label = tf.dtypes.cast(label, tf.int32)
         if addCharacteristics:
-            r = np.zeros((label.shape[0]+s.shape[1]))
-            print("This is not working",r,  r.shape, label.numpy(), label.numpy().shape)
-            r[:label.shape[0]] = label[:]
-            r[label.shape[0]:] = s[label,:]
+            #print("shapes", label.shape, (tf.gather(s, tf.math.argmax(label))).shape)
+            r = tf.concat([label, tf.gather(s, tf.math.argmax(label))], axis=-1)
+            #print(r.shape)
             label = r
         # load the raw data from the file as a string
         img = tf.io.read_file(file_path)
@@ -59,6 +56,8 @@ def load_data_using_tfdata(dataset, input_shape, steps_per_epoch, folders, addCh
     img_dims = input_shape
     batch_size = steps_per_epoch
     s = np.genfromtxt('characteristics2.csv', delimiter=',')
+    s = tf.convert_to_tensor(s)
+    s = tf.dtypes.cast(s, tf.int32)
 
     data_generator = {}
     for x in folders:

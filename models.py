@@ -184,15 +184,19 @@ def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False
     cce = tf.keras.losses.CategoricalCrossentropy()
     def featuresLossFunction(y_true, y_pred):
     #toto treba ešte spraviť
-        print("Shapes", y_pred.shape,y_true.shape, y_pred[:,:n].shape, y_true[:,k:].shape)
-        return K.mean(K.square(y_pred[:,:n] - y_true[:,k:]))
+        #print("Shapes", y_pred, y_true,y_pred.shape,y_true.shape, y_pred[:,:n].shape, y_true[:,k:].shape)
+        return K.mean(K.square(y_pred[:,:n] - tf.cast(y_true, tf.float32)[:,k:]))
 
     def customCCE(y_true, y_pred):
-        return cce(y_true[0:k], y_pred).numpy()
+        #print("Shapes CustomCCE", y_pred.shape,y_true.shape, y_pred, y_true)
+        
+        return cce(y_true[:,0:k], y_pred).numpy()
         
 
     def customSPA(y_true,y_pred):
-        return tf.keras.metrics.sparse_categorical_accuracy(y_true[0:k], y_pred)
+        #print("Shapes customSPA", y_pred.shape,y_true.shape, y_pred, y_true)
+        #print("customspa",y_true[:,0:k].shape, y_pred.shape)
+        return tf.keras.metrics.sparse_categorical_accuracy(tf.math.argmax(y_true[:,0:k],1), y_pred)
 
     tf.executing_eagerly()
 
@@ -251,7 +255,7 @@ def fitModel(model, dataset, input_shape, steps_per_epoch, epochs):
 
 
 def fitModelTFLoad(model, dataset, input_shape, steps_per_epoch, epochs):
-    data_generator = load_data_using_tfdata(dataset, input_shape, steps_per_epoch,['train','validation'])
+    data_generator = load_data_using_tfdata(dataset, input_shape, steps_per_epoch,['train','validation'], True)
 
     start = time.time()
     history = model.fit_generator(
