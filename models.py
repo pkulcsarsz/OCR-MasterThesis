@@ -185,12 +185,12 @@ def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False
     def featuresLossFunction(y_true, y_pred):
     #toto treba ešte spraviť
         #print("Shapes", y_pred, y_true,y_pred.shape,y_true.shape, y_pred[:,:n].shape, y_true[:,k:].shape)
-        return K.mean(K.square(y_pred[:,:n] - tf.cast(y_true, tf.float32)[:,k:]))
+        return K.square(y_pred[:,:n] - tf.cast(y_true, tf.float32)[:,k:])
 
     def customCCE(y_true, y_pred):
         #print("Shapes CustomCCE", y_pred.shape,y_true.shape, y_pred, y_true)
         
-        return cce(y_true[:,0:k], y_pred).numpy()
+        return cce(y_true[:,0:k], y_pred)
         
 
     def customSPA(y_true,y_pred):
@@ -198,14 +198,19 @@ def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False
         #print("customspa",y_true[:,0:k].shape, y_pred.shape)
         return tf.keras.metrics.sparse_categorical_accuracy(tf.math.argmax(y_true[:,0:k],1), y_pred)
 
+    def featuresAccuracy(y_true, y_pred):
+        return K.sum(K.square(y_pred[:,:n] - tf.cast(y_true, tf.float32)[:,k:]))
+
     tf.executing_eagerly()
 
 
-    model.compile(loss=[customCCE, featuresLossFunction],  metrics=[customSPA], optimizer='adam', run_eagerly=True)
+    model.compile(loss=[customCCE, featuresLossFunction],  metrics=[customSPA, featuresAccuracy], optimizer='adam', run_eagerly=True)
     # model.run_eagerly = True
 
     [history, time_taken] = fitModelTFLoad(
         model, dataset, input_shape, steps_per_epoch, epochs)
+
+    print(history)
 
     print("Time taken, " + str(time_taken))
     if use_cache:
