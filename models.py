@@ -169,11 +169,12 @@ def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False
     # add new classifier layers
     flat1 = Flatten()(model.layers[-1].output)
     class1 = Dense(1024, activation='relu')(flat1)
-    output = Dense(num_classes, activation='softmax')(class1)
+    classifierOutput = Dense(num_classes, activation='softmax', name='classifierOutput')(class1)
 
+    featuresOutput = Flatten(name='featuresOutput')(model.layers[-1].output)
 
     # define new model
-    model = Model(inputs=model.inputs, outputs=[output, flat1])
+    model = Model(inputs=model.inputs, outputs=[classifierOutput, featuresOutput])
     # summarize
     model.summary()
 
@@ -183,19 +184,13 @@ def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False
     print(num_classes)
     cce = tf.keras.losses.CategoricalCrossentropy()
     def featuresLossFunction(y_true, y_pred):
-    #toto treba ešte spraviť
-        #print("Shapes", y_pred, y_true,y_pred.shape,y_true.shape, y_pred[:,:n].shape, y_true[:,k:].shape)
         return K.square(y_pred[:,:n] - tf.cast(y_true, tf.float32)[:,k:])
 
-    def customCCE(y_true, y_pred):
-        #print("Shapes CustomCCE", y_pred.shape,y_true.shape, y_pred, y_true)
-        
+    def classifierLossFunction(y_true, y_pred):
         return cce(y_true[:,0:k], y_pred)
         
 
-    def customSPA(y_true,y_pred):
-        #print("Shapes customSPA", y_pred.shape,y_true.shape, y_pred, y_true)
-        #print("customspa",y_true[:,0:k].shape, y_pred.shape)
+    def classifierAccuracy(y_true,y_pred):
         return tf.keras.metrics.sparse_categorical_accuracy(tf.math.argmax(y_true[:,0:k],1), y_pred)
 
     def featuresAccuracy(y_true, y_pred):
@@ -203,9 +198,11 @@ def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False
 
     tf.executing_eagerly()
 
+    losses = {'classifierOutput': classifierLossFunction, 'featuresOutput': featuresLossFunction}
+    metrics = {'classifierOutput': classifierAccuracy, 'featuresOutput': featuresAccuracy}
+    weights = {'classifierOutput':1.0, 'featuresOutput':10.0}
 
-    model.compile(loss=[customCCE, featuresLossFunction],  metrics=[customSPA, featuresAccuracy], optimizer='adam', run_eagerly=True)
-    # model.run_eagerly = True
+    model.compile(loss=losses,  metrics=metrics, optimizer='Adam', run_eagerly=True, loss_weights=weights)
 
     [history, time_taken] = fitModelTFLoad(
         model, dataset, input_shape, steps_per_epoch, epochs)
