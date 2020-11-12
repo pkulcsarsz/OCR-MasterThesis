@@ -67,7 +67,6 @@ def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False
 
     n = 13 # number of features
     k = num_classes #number of classes
-
     cce = tf.keras.losses.CategoricalCrossentropy()
     def featuresLossFunction(y_true, y_pred):
         return K.square(y_pred[:,:n] - tf.cast(y_true, tf.float32)[:,k:])
