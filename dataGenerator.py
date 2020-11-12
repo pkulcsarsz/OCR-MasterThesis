@@ -24,6 +24,7 @@ def load_data_using_tfdata(dataset, input_shape, steps_per_epoch, folders, addCh
             r = tf.concat([label, tf.gather(s, tf.math.argmax(label))], axis=-1)
             #print(r.shape)
             label = r
+            print(label.shape)
         # load the raw data from the file as a string
         img = tf.io.read_file(file_path)
         # convert the compressed string to a 3D uint8 tensor
@@ -76,5 +77,13 @@ def load_data_using_tfdata(dataset, input_shape, steps_per_epoch, folders, addCh
         # eg. cache='./data.tfcache'
         data_generator[x] = prepare_for_training(
             labeled_ds, cache='data.tfcache')
+
+
+
+
+
+
+
+            
 
     return data_generator
