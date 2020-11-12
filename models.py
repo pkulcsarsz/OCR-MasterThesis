@@ -280,3 +280,17 @@ def fitModel(model, dataset, input_shape, steps_per_epoch, epochs):
     return [history, time.time() - start]
 
 
+
+def evaluateModel(model, dataset, input_shape, steps_per_epoch, epochs):
+    test_datagen = ImageDataGenerator(
+        featurewise_center=True, featurewise_std_normalization=True, rescale=1. / 255)
+    validation_generator = test_datagen.flow_from_directory(
+        getValidationDatasetPath(dataset),
+        target_size=(input_shape[0], input_shape[1]),
+        batch_size=steps_per_epoch,
+        class_mode='categorical')
+
+    print("================= Evaluating the model =================")
+    scores = model.evaluate_generator(validation_generator)
+    print("%s: %.2f" % (model.metrics_names[0], scores[0]))
+    print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))

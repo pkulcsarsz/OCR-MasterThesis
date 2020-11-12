@@ -7,7 +7,7 @@ import tensorflow as tf
 import tensorflow.keras.backend as K
 import helpers
 import time
-from modelsHelpers import saveModel, loadModel, existsModelCache, createAndSaveCurves, getTrainDatasetPath, getValidationDatasetPath
+from modelsHelpers import saveModel, loadModel, existsModelCache, createAndSaveCurves, getTrainDatasetPath, getValidationDatasetPath, createAndSaveCurvesFeatures
 from dataGenerator import load_data_using_tfdata
 
 
@@ -95,16 +95,12 @@ def customLeNet(input_shape, num_classes, steps_per_epoch, epochs, use_cache=Fal
     model.add(Conv2D(64, (3, 3)))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-
     flat1 = Flatten()(model.layers[-1].output)
 
-    dense1 = Dense(units=4096, activation="relu")(flat1)
-    dense2 = Dense(units=4096, activation="relu")(dense1)
+    dense1 = Dense(units=256, activation="relu")(flat1)
+    classifierOutput = Dense(num_classes, activation='softmax', name='classifierOutput')(dense1)
 
-    class1 = Dense(1024, activation='relu')(dense2)
-    classifierOutput = Dense(num_classes, activation='softmax', name='classifierOutput')(class1)
-
-    featuresOutput = Flatten(name='featuresOutput')(dense2)
+    featuresOutput = Flatten(name='featuresOutput')(dense1)
 
     # define new model
     model = Model(inputs=model.inputs, outputs=[classifierOutput, featuresOutput])
@@ -130,24 +126,19 @@ def customLeNet(input_shape, num_classes, steps_per_epoch, epochs, use_cache=Fal
     tf.executing_eagerly()
 
     losses = {'classifierOutput': classifierLossFunction, 'featuresOutput': featuresLossFunction}
-    metrics = {'accuracy': classifierAccuracy, 'classifierOutput': classifierAccuracy, 'featuresOutput': featuresAccuracy}
-    weights = {'classifierOutput':1.0, 'featuresOutput':10.0}
+    metrics = {'classifierOutput': classifierAccuracy, 'featuresOutput': featuresAccuracy}
+    weights = {'classifierOutput':1.0, 'featuresOutput':1.0}
 
-    model.compile(loss=losses,  metrics=metrics, optimizer='Adam', run_eagerly=True, loss_weights=weights)
+    model.compile(loss=losses,  metrics=[metrics], optimizer='rmsprop', run_eagerly=True, loss_weights=weights)
     model.run_eagerly = True
     [history, time_taken] = fitModelTFLoad(
         model, dataset, input_shape, steps_per_epoch, epochs, True)
 
 
-    # fitAndEvaluate(model, steps_per_epoch, epochs, x_train, y_train, x_valid, y_valid)
-
-    [history, time_taken] = fitModelTFLoad(
-        model, dataset, input_shape, steps_per_epoch, epochs, True)
-
     if use_cache:
         saveModel(model, model_name, dataset)
 
-    createAndSaveCurves(history, model_name, dataset)
+    createAndSaveCurvesFeatures(history, model_name, dataset)
 
     return history
 
@@ -165,3 +156,19 @@ def fitModelTFLoad(model, dataset, input_shape, steps_per_epoch, epochs, addChar
 
     return [history, time.time() - start]
 
+
+
+
+def evaluateModel(model, dataset, input_shape, steps_per_epoch, epochs):
+    test_datagen = ImageDataGenerator(
+        featurewise_center=True, featurewise_std_normalization=True, rescale=1. / 255)
+    validation_generator = test_datagen.flow_from_directory(
+        getValidationDatasetPath(dataset),
+        target_size=(input_shape[0], input_shape[1]),
+        batch_size=steps_per_epoch,
+        class_mode='categorical')
+
+    print("================= Evaluating the model =================")
+    scores = model.evaluate_generator(validation_generator)
+    print("%s: %.2f" % (model.metrics_names[0], scores[0]))
+    print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
