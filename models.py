@@ -1,5 +1,5 @@
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Dense, Activation, Conv2D, Flatten, MaxPooling2D, Dropout, GlobalAveragePooling2D
+from tensorflow.keras.layers import Dense, Activation, Conv2D, MaxPool2D, Flatten, MaxPooling2D, Dropout, GlobalAveragePooling2D
 from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -178,7 +178,56 @@ def VGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, data
     # summarize
     model.summary()
 
-    model.compile(loss='categorical_crossentropy',metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='rmsprop', metrics=['accuracy'])
+
+    [history, time_taken] = fitModel(
+        model, dataset, input_shape, steps_per_epoch, epochs)
+
+
+    print("Time taken, " + str(time_taken))
+    if use_cache:
+        saveModel(model, model_name, dataset)
+
+    createAndSaveCurves(history, model_name, dataset)
+
+    return model
+
+
+def sVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, dataset='dataset1'):
+    model_name = 'sVGG'
+    helpers.createFoldersForModel(model_name, dataset)
+    print("===================== " + model_name + " model ====================")
+    # load model without classifier layers
+    model = Sequential()
+    model.add(Conv2D(input_shape=input_shape,filters=64,kernel_size=(3,3),padding="same", activation="relu"))
+    model.add(Conv2D(filters=64,kernel_size=(3,3),padding="same", activation="relu"))
+    model.add(MaxPool2D(pool_size=(2,2),strides=(2,2)))
+    model.add(Conv2D(filters=128, kernel_size=(3,3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=128, kernel_size=(3,3), padding="same", activation="relu"))
+    model.add(MaxPool2D(pool_size=(2,2),strides=(2,2)))
+    model.add(Conv2D(filters=256, kernel_size=(3,3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=256, kernel_size=(3,3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=256, kernel_size=(3,3), padding="same", activation="relu"))
+    model.add(MaxPool2D(pool_size=(2,2),strides=(2,2)))
+    model.add(Conv2D(filters=512, kernel_size=(3,3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=512, kernel_size=(3,3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=512, kernel_size=(3,3), padding="same", activation="relu"))
+    model.add(MaxPool2D(pool_size=(2,2),strides=(2,2)))
+    model.add(Conv2D(filters=512, kernel_size=(3,3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=512, kernel_size=(3,3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=512, kernel_size=(3,3), padding="same", activation="relu"))
+    model.add(MaxPool2D(pool_size=(2,2),strides=(2,2)))
+    model.add(Flatten())
+    model.add(Dense(units=4096,activation="relu"))
+    model.add(Dense(units=4096,activation="relu"))
+    model.add(Dense(num_classes, activation='softmax'))
+
+    # summarize
+    model.summary()
+
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='rmsprop', metrics=['accuracy'])
 
     [history, time_taken] = fitModel(
         model, dataset, input_shape, steps_per_epoch, epochs)

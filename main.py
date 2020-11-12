@@ -25,8 +25,11 @@ if(dataset != 'dataset1' and dataset != 'dataset2'):
         raise NameError("Dataset is not recognized.")
 
 if selectedModel == 'VGG':
-  model = models.VGG(inputShape, num_classes, steps_per_epoch = 10, epochs = 40, use_cache=Falise, dataset=dataset)
+  model = models.VGG(inputShape, num_classes, steps_per_epoch = 10, epochs = 40, use_cache=False, dataset=dataset)
 
 if selectedModel == 'customVGG':
   model = modelsWithFeatures.customVGG(inputShape, num_classes, steps_per_epoch = 10, epochs = 10, use_cache=False, dataset=dataset)
 
+
+if selectedModel == 'customLeNet':
+  model = modelsWithFeatures.customLeNet(inputShape, num_classes, steps_per_epoch = 10, epochs = 10, use_cache=False, dataset=dataset)
