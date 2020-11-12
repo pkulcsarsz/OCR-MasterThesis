@@ -25,60 +25,8 @@ if(dataset != 'dataset1' and dataset != 'dataset2'):
         raise NameError("Dataset is not recognized.")
 
 if selectedModel == 'VGG':
-  model = modelsWithFeatures.VGG(inputShape, num_classes, steps_per_epoch = 30, epochs = 40, use_cache=True, dataset=dataset)
+  model = models.VGG(inputShape, num_classes, steps_per_epoch = 10, epochs = 40, use_cache=Falise, dataset=dataset)
 
 if selectedModel == 'customVGG':
-  model = modelsWithFeatures.customVGG(inputShape, num_classes, steps_per_epoch = 30, epochs = 40, use_cache=True, dataset=dataset)
-
-
-
-# [X, Y] = data.load_images('dataset1/train', 0, 5, num_classes, False, True)
-
-# print(Y[0:3])
-
-# Load images
-# [X, Y] = data.load_images(dataset, 0, 20, num_classes)
-# x_train, x_valid, y_train, y_valid = train_test_split(X, Y, test_size=0.20, shuffle= True)
-
-# Get model
-# model = models.mDummy1(inputShape, num_classes, x_train, y_train, x_valid, y_valid,
-#         steps_per_epoch = 40, epochs = 5, use_cache=False, dataset=dataset)
-
-# model = models.mLeNet(inputShape, num_classes, x_train, y_train, x_valid, y_valid,
-#         steps_per_epoch = 20, epochs = 10, use_cache=True, dataset=dataset)
-# [X, Y] = data.load_images(dataset, 50, 70, num_classes)
-# models.evaluateModel(model, X, Y)
-
-# model = models.mResNet50(inputShape, num_classes, x_train, y_train, x_valid, y_valid, False)
-
-
-# dataset = 'dataset1'
-
-# model = models.mLeNet(inputShape, num_classes,
-#         steps_per_epoch = 30, epochs = 100, use_cache=True, dataset=dataset)
-
-
-# dataset = 'dataset2'
-
-# model = models.mLeNet(inputShape, num_classes,
-#         steps_per_epoch = 30, epochs = 100, use_cache=True, dataset=dataset)
-
-
-# dataset = 'dataset2'
-
-# model = models.mResNet50_2(inputShape, num_classes,
-#                            steps_per_epoch=30, epochs=300, use_cache=True, dataset=dataset)
-
-
-# dataset = 'dataset1'
-
-# model = models.mResNet50_2(inputShape, num_classes,
-#                            steps_per_epoch=30, epochs=300, use_cache=True, dataset=dataset)
-
-
-# dataset = 'dataset2'
-# model = models.mResNet50(inputShape, num_classes,
-#         steps_per_epoch = 30, epochs = 40, use_cache=True, dataset=dataset)
-
-
+  model = modelsWithFeatures.customVGG(inputShape, num_classes, steps_per_epoch = 10, epochs = 10, use_cache=False, dataset=dataset)
 

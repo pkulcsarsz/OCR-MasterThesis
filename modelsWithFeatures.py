@@ -10,38 +10,6 @@ import time
 from modelsHelpers import saveModel, loadModel, existsModelCache, createAndSaveCurves, getTrainDatasetPath, getValidationDatasetPath
 from dataGenerator import load_data_using_tfdata
 
-def VGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, dataset='dataset1'):
-    model_name = 'VGG'
-    helpers.createFoldersForModel(model_name, dataset)
-    print("===================== " + model_name + " model ====================")
-    # load model without classifier layers
-    vgg_conv = VGG16(include_top=False, input_shape=input_shape)
-    # add new classifier layers
-    model = Sequential()
-
-    model.add(vgg_conv)
-    model.add(Flatten())
-    model.add(Dense(1024, activation='relu'))
-    model.add(Dense(num_classes, activation='softmax'))
-
-    # summarize
-    model.summary()
-
-    model.compile(loss='categorical_crossentropy',metrics=['accuracy'])
-
-    [history, time_taken] = fitModelTFLoad(
-        model, dataset, input_shape, steps_per_epoch, epochs, False)
-
-
-    print("Time taken, " + str(time_taken))
-    if use_cache:
-        saveModel(model, model_name, dataset)
-
-    createAndSaveCurves(history, model_name, dataset)
-
-    return model
-
-
 
 def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, dataset='dataset1'):
     model_name = 'Custom_VGG'
@@ -102,7 +70,6 @@ def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False
     return model
 
 
-
 def fitModelTFLoad(model, dataset, input_shape, steps_per_epoch, epochs, addCharacteristics):
     data_generator = load_data_using_tfdata(dataset, input_shape, steps_per_epoch,['train','validation'], addCharacteristics)
 
@@ -113,10 +80,6 @@ def fitModelTFLoad(model, dataset, input_shape, steps_per_epoch, epochs, addChar
         epochs=epochs,
         validation_data=data_generator['validation'],
         validation_steps=data_generator['validation_count'] / steps_per_epoch)
-
-
-
-
 
     return [history, time.time() - start]
 
