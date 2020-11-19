@@ -67,7 +67,7 @@ def createAndSaveAccCurve(history, model_name, dataset):
   
 def createAndSaveCurvesFeatures(history,model_name, dataset):
     #createAndSaveLossCurveFeatures(history, model_name, dataset)
-    createAndSaveAccCurve(history, model_name, dataset)
+    createAndSaveAccCurveFeatures(history, model_name, dataset)
 
 def createAndSaveLossCurveFeatures(history,model_name, dataset):
     plt.figure(figsize=[8,6])

@@ -140,7 +140,7 @@ def customLeNet(input_shape, num_classes, steps_per_epoch, epochs, use_cache=Fal
 
     createAndSaveCurvesFeatures(history, model_name, dataset)
 
-    return history
+    return model
 
 
 def mLeNet2(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, dataset='dataset1'):
@@ -186,7 +186,7 @@ def mLeNet2(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, 
 
     createAndSaveCurves(history, model_name, dataset)
 
-    return history
+    return model
 
 
 def fitModelTFLoad(model, dataset, input_shape, steps_per_epoch, epochs, addCharacteristics):

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 loss_object = tf.keras.losses.CategoricalCrossentropy()
-loss_object = tf.keras.losses.MSE()
+#loss_object = tf.keras.losses.MSE()
 
 letters = ["0", "1" , "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E" , "F", "G" , "H", "I", "J", "K", "L"
             , "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W",
@@ -34,8 +34,11 @@ def get_label(model_prediction):
 def get_label_index(label):
     return np.argmax(np.asarray(letters) == "3")
 
-def loadRandomImage(letter = "0"):
-    selected_image_path = random.choice(os.listdir("dataset2/validation/" + letter + "/"))
+def loadRandomImage(letter = "0", exactImage = None):
+    if(exactImage == None):
+        selected_image_path = "dataset2/validation/" + letter + "/" + random.choice(os.listdir("dataset2/validation/" + letter + "/"))
+    else:
+        selected_image_path = "dataset2/validation/" + letter + "/" + exactImage
 
     image_raw = tf.io.read_file(selected_image_path)
     image = tf.image.decode_image(image_raw)
