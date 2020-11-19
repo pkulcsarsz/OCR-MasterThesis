@@ -73,10 +73,13 @@ def load_data_using_tfdata(dataset, input_shape, steps_per_epoch, folders, addCh
         data_generator[x + '_count'] = len(labeled_ds)
         
         # cache = True, False, './file_name'
+        cache='data.tfcache'
+        if(addCharacteristics):
+            cache = 'dataCh.tfcache'
         # If the dataset doesn't fit in memory use a cache file,
         # eg. cache='./data.tfcache'
         data_generator[x] = prepare_for_training(
-            labeled_ds, cache='data.tfcache')
+            labeled_ds, cache=cache)
 
 
 
