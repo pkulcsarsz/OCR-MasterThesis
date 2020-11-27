@@ -2,6 +2,7 @@ from skimage.io import imread
 from skimage.transform import resize
 import numpy as np
 import tensorflow as tf
+import math
 
 class CustomGenerator(tf.keras.utils.Sequence):
 
@@ -10,7 +11,7 @@ class CustomGenerator(tf.keras.utils.Sequence):
         self.batch_size = batch_size
 
     def __len__(self):
-        return np.ceil(len(self.image_filenames) / self.batch_size)
+        return math.ceil(len(self.image_filenames) / self.batch_size)
 
     def __getitem__(self, idx):
         batch_x = self.image_filenames[idx * self.batch_size:(idx + 1) * self.batch_size]
