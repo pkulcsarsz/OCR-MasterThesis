@@ -134,7 +134,7 @@ def customLeNet(input_shape, num_classes, steps_per_epoch, epochs, use_cache=Fal
 
     model.compile(loss=losses,  metrics=metrics, optimizer='rmsprop', run_eagerly=True, loss_weights=weights)
     model.run_eagerly = True
-    [history, time_taken] = fitModelTFLoad(
+    [history, time_taken] = fitModel(
         model, dataset, input_shape, steps_per_epoch, epochs, True)
 
 
@@ -214,15 +214,13 @@ def fitModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics
     my_validation_batch_generator = CustomGenerator(validation_filenames, GT_validation, batch_size)
 
     start = time.time()
-    history = model.fit(my_training_batch_generator,
-                                            steps_per_epoch=np.ceil(len(training_filenames)/batch_size),
-                                            epochs=epochs,
-                                            verbose=1,
-                                            validation_data=my_validation_batch_generator,
-                                            validation_steps=np.ceil(len(validation_filenames) / batch_size),
-                                            use_multiprocessing=True,
-                                            workers=16,
-                                            max_queue_size=32)
+    history = model.fit(
+        my_training_batch_generator,
+        steps_per_epoch=np.ceil(len(training_filenames)/batch_size),
+        epochs=epochs,
+        verbose=1,
+        validation_data=my_validation_batch_generator,
+        validation_steps=np.ceil(len(validation_filenames) / batch_size))
 
     return [history, time.time() - start]
 
