@@ -9,7 +9,7 @@ import helpers
 import time
 from modelsHelpers import saveModel, loadModel, existsModelCache, createAndSaveCurves, getTrainDatasetPath, getValidationDatasetPath, createAndSaveCurvesFeatures
 from dataGenerator import load_data_using_tfdata
-from anotherDataGenerator import MY_Generator
+from anotherDataGenerator import CustomGenerator
 from data import load_image_names_and_labels
 
 
@@ -209,10 +209,11 @@ def fitModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics
     [training_filenames, GT_training] = load_image_names_and_labels(dataset, 'train', addCharacteristics)
     [validation_filenames, GT_validation] = load_image_names_and_labels(dataset, 'validation', addCharacteristics)
 
-    my_training_batch_generator = My_Generator(training_filenames, GT_training, batch_size)
-    my_validation_batch_generator = My_Generator(validation_filenames, GT_validation, batch_size)
+    my_training_batch_generator = CustomGenerator(training_filenames, GT_training, batch_size)
+    my_validation_batch_generator = CustomGenerator(validation_filenames, GT_validation, batch_size)
 
-    model.fit_generator(generator=my_training_batch_generator,
+    start = time.time()
+    history = model.fit(generator=my_training_batch_generator,
                                             steps_per_epoch=len(training_filenames)/batch_size,
                                             epochs=epochs,
                                             verbose=1,
