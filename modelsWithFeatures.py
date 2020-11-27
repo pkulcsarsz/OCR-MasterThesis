@@ -205,7 +205,7 @@ def fitModelTFLoad(model, dataset, input_shape, steps_per_epoch, epochs, addChar
     return [history, time.time() - start]
 
 
-def firModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics):
+def fitModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics):
     [training_filenames, GT_training] = load_image_names_and_labels(dataset, 'train', addCharacteristics)
     [validation_filenames, GT_validation] = load_image_names_and_labels(dataset, 'validation', addCharacteristics)
 

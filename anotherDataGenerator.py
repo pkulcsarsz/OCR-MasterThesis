@@ -1,8 +1,9 @@
 from skimage.io import imread
 from skimage.transform import resize
 import numpy as np
+import tensorflow as tf
 
-class MY_Generator(Sequence):
+class MY_Generator(tf.keras.utils.Sequence):
 
     def __init__(self, image_filenames, labels, batch_size):
         self.image_filenames, self.labels = image_filenames, labels
