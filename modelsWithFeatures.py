@@ -216,11 +216,11 @@ def fitModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics
     start = time.time()
     history = model.fit(
         my_training_batch_generator,
-        steps_per_epoch=np.ceil(len(training_filenames)/batch_size),
+        steps_per_epoch=len(training_filenames)/batch_size,
         epochs=epochs,
         verbose=1,
         validation_data=my_validation_batch_generator,
-        validation_steps=np.ceil(len(validation_filenames) / batch_size))
+        validation_steps=len(validation_filenames) / batch_size)
 
     return [history, time.time() - start]
 
