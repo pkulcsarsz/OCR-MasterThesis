@@ -11,6 +11,7 @@ from modelsHelpers import saveModel, loadModel, existsModelCache, createAndSaveC
 from dataGenerator import load_data_using_tfdata
 from anotherDataGenerator import CustomGenerator
 from data import load_image_names_and_labels
+import numpy as np
 
 
 def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, dataset='dataset1'):
@@ -214,11 +215,11 @@ def fitModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics
 
     start = time.time()
     history = model.fit(my_training_batch_generator,
-                                            steps_per_epoch=len(training_filenames)/batch_size,
+                                            steps_per_epoch=np.ceil(len(training_filenames)/batch_size),
                                             epochs=epochs,
                                             verbose=1,
                                             validation_data=my_validation_batch_generator,
-                                            validation_steps=len(validation_filenames) / batch_size,
+                                            validation_steps=np.ceil(len(validation_filenames) / batch_size),
                                             use_multiprocessing=True,
                                             workers=16,
                                             max_queue_size=32)
