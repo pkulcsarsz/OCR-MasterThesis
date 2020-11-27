@@ -219,10 +219,7 @@ def fitModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics
                                             epochs=epochs,
                                             verbose=1,
                                             validation_data=my_validation_batch_generator,
-                                            validation_steps=np.ceil(len(validation_filenames) / batch_size),
-                                            use_multiprocessing=True,
-                                            workers=16,
-                                            max_queue_size=32)
+                                            validation_steps=np.ceil(len(validation_filenames) / batch_size))
 
     return [history, time.time() - start]
 
