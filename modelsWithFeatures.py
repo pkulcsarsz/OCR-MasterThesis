@@ -9,6 +9,8 @@ import helpers
 import time
 from modelsHelpers import saveModel, loadModel, existsModelCache, createAndSaveCurves, getTrainDatasetPath, getValidationDatasetPath, createAndSaveCurvesFeatures
 from dataGenerator import load_data_using_tfdata
+from anotherDataGenerator import MY_Generator
+from data import load_image_names_and_labels
 
 
 def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, dataset='dataset1'):
@@ -178,7 +180,7 @@ def mLeNet2(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, 
     model.compile(loss='categorical_crossentropy',
                   optimizer='rmsprop', metrics=['accuracy'])
 
-    [history, time_taken] = fitModelTFLoad(
+    [history, time_taken] = fitModel(
         model, dataset, input_shape, steps_per_epoch, epochs, False)
 
     if use_cache:
@@ -202,6 +204,25 @@ def fitModelTFLoad(model, dataset, input_shape, steps_per_epoch, epochs, addChar
 
     return [history, time.time() - start]
 
+
+def firModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics):
+    [training_filenames, GT_training] = load_image_names_and_labels(dataset, 'train', addCharacteristics)
+    [validation_filenames, GT_validation] = load_image_names_and_labels(dataset, 'validation', addCharacteristics)
+
+    my_training_batch_generator = My_Generator(training_filenames, GT_training, batch_size)
+    my_validation_batch_generator = My_Generator(validation_filenames, GT_validation, batch_size)
+
+    model.fit_generator(generator=my_training_batch_generator,
+                                            steps_per_epoch=len(training_filenames)/batch_size,
+                                            epochs=epochs,
+                                            verbose=1,
+                                            validation_data=my_validation_batch_generator,
+                                            validation_steps=len(validation_filenames) / batch_size,
+                                            use_multiprocessing=True,
+                                            workers=16,
+                                            max_queue_size=32)
+
+    return [history, time.time() - start]
 
 
 
