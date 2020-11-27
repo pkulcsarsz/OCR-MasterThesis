@@ -17,4 +17,4 @@ class CustomGenerator(tf.keras.utils.Sequence):
         batch_x = self.image_filenames[idx * self.batch_size:(idx + 1) * self.batch_size]
         batch_y = self.labels[idx * self.batch_size:(idx + 1) * self.batch_size]
 
-        return np.array([imread(file_name) for file_name in batch_x]), np.array(batch_y)
+        return np.array([imread(file_name) / 255 for file_name in batch_x]), np.array(batch_y)
