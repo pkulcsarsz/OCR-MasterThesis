@@ -56,11 +56,11 @@ def customVGG(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False
 
     losses = {'classifierOutput': classifierLossFunction, 'featuresOutput': featuresLossFunction}
     metrics = {'classifierOutput': classifierAccuracy, 'featuresOutput': featuresAccuracy}
-    weights = {'classifierOutput':1.0, 'featuresOutput':10.0}
+    weights = {'classifierOutput':1.0, 'featuresOutput':1.0}
 
     model.compile(loss=losses,  metrics=metrics, optimizer='Adam', run_eagerly=True, loss_weights=weights)
     model.run_eagerly = True
-    [history, time_taken] = fitModelTFLoad(
+    [history, time_taken] = fitModel(
         model, dataset, input_shape, steps_per_epoch, epochs, True)
 
 
