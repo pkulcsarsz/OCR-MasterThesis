@@ -66,13 +66,13 @@ def createAndSaveAccCurve(history, model_name, dataset):
 
   
 def createAndSaveCurvesFeatures(history,model_name, dataset):
-    #createAndSaveLossCurveFeatures(history, model_name, dataset)
+    createAndSaveLossCurveFeatures(history, model_name, dataset)
     createAndSaveAccCurveFeatures(history, model_name, dataset)
 
 def createAndSaveLossCurveFeatures(history,model_name, dataset):
     plt.figure(figsize=[8,6])
-    plt.plot(history.history['loss'],'r',linewidth=3.0)
-    plt.plot(history.history['val_loss'],'b',linewidth=3.0)
+    plt.plot(history.history['classifierOutput_loss'],'r',linewidth=3.0)
+    plt.plot(history.history['val_classifierOutput_loss'],'b',linewidth=3.0)
     plt.legend(['Training loss', 'Validation Loss'],fontsize=18)
     plt.xlabel('Epochs ',fontsize=16)
     plt.ylabel('Loss',fontsize=16)
