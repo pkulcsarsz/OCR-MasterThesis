@@ -1,5 +1,4 @@
 from skimage.io import imread
-from skimage.transform import resize
 import numpy as np
 import tensorflow as tf
 import math
