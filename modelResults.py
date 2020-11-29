@@ -77,7 +77,7 @@ def createResultsForModels(trained_model, trained_model_features):
     results = np.zeros((37,7))
 
     for letter in letters:
-        label_index = get_label_index(letter)
+        label_index = get_label_index(letters, letter)
         for filename in os.listdir('dataset3/validation/' + letter):
             # Load the image
             imToTest = loadImageFromPath('dataset3/validation/' + letter + '/' + filename)
@@ -97,23 +97,23 @@ def createResultsForModels(trained_model, trained_model_features):
             label_f_adv = label_f_adv[0]
             label_f_adv_f = label_f_adv_f[0]
             #Check if the predictions were correct
-            if (get_label(label)[0] == letter):
+            if (get_label(letters, label)[0] == letter):
                 succ = succ + 1
                 results[label_index,1] += 1
-            if (get_label(label_adv)[0] == letter):
+            if (get_label(letters, label_adv)[0] == letter):
                 succ_adv = succ_adv + 1
                 results[label_index,2] += 1
-            if (get_label(label_adv_f)[0] == letter):
+            if (get_label(letters, label_adv_f)[0] == letter):
                 succ_adv_f = succ_adv_f + 1
                 results[label_index,3] += 1
             
-            if (get_label(label_f)[0] == letter):
+            if (get_label(letters, label_f)[0] == letter):
                 succ_f = succ_f + 1
                 results[label_index,4] += 1
-            if (get_label(label_f_adv)[0] == letter):
+            if (get_label(letters, label_f_adv)[0] == letter):
                 succ_f_adv = succ_f_adv + 1
                 results[label_index,5] += 1
-            if (get_label(label_f_adv_f)[0] == letter):
+            if (get_label(letters, label_f_adv_f)[0] == letter):
                 succ_f_adv_f = succ_f_adv_f + 1
                 results[label_index,6] += 1
 
