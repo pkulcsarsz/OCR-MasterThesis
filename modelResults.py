@@ -21,7 +21,7 @@ def loadImageFromPath(path):
 def createResultsForModels2(modelsArrays, modelsAreFeatures = [], dataset = 'dataset3'):
     total = 0
     amountOfModels = len(modelsArrays)
-    results = np.zeros((37,1 + amountOfModels + amountOfModels * amountOfModels)
+    results = np.zeros((37,1 + amountOfModels + amountOfModels * amountOfModels))
     imagesToTest = [None]*(len(modelsArrays) + 1)
 
     for letter in letters:
