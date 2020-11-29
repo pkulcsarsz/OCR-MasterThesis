@@ -21,12 +21,13 @@ def loadImageFromPath(path):
 def createResultsForModels2(modelsArrays, modelsAreFeatures = [], dataset = 'dataset3'):
     total = 0
     amountOfModels = len(modelsArrays)
-    results = np.zeros((37,1 + amountOfModels + amountOfModels * amountOfModels))
+    cols = 1 + amountOfModels + amountOfModels^2
+    results = np.zeros((37, cols))
     imagesToTest = [None]*(len(modelsArrays) + 1)
 
     for letter in letters:
         label_index = get_label_index(letters, letter)
-        for filename in os.listdir(dataset + '/validation' + letter):
+        for filename in os.listdir(dataset + '/validation/' + letter):
             imagesToTest[0] = loadImageFromPath('dataset3/validation/' + letter + '/' + filename)
             for i in range(len(modelsArrays)):
                 imagesToTest[i + 1] = generate_adversarial(modelsArrays[i], imagesToTest[0], tf.one_hot(label_index, 36), 0.2, True)
@@ -61,6 +62,7 @@ def createResultsForModels2(modelsArrays, modelsAreFeatures = [], dataset = 'dat
         results[label_index, 1:] = results[label_index, 1:] / results[label_index, 0]
 
     results[-1, 1:] = results[-1, 1:] / results[-1, 0]
+    print("Done")
 
 
 def createResultsForModels(trained_model, trained_model_features):
