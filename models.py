@@ -86,7 +86,7 @@ def customLeNet(input_shape, num_classes, steps_per_epoch, epochs, use_cache=Fal
 
 
 def customLeNet2(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, dataset='dataset1'):
-    model_name = 'customLeNet'
+    model_name = 'customLeNet2'
     helpers.createFoldersForModel(model_name, dataset)
     print("===================== " + model_name + " model ====================")
     if existsModelCache(model_name, dataset) and use_cache:

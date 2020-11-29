@@ -1,5 +1,8 @@
 import os
 from adversaries import generate_adversarial
+from data import get_label_index, get_label
+import numpy as np
+import tensorflow as tf
 
 letters = ["0", "1" , "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E" , "F", "G" , "H", "I", "J", "K", "L"
             , "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W",
@@ -14,6 +17,50 @@ def loadImageFromPath(path):
   image = image[None, ...]
 
   return image
+
+def createResultsForModels2(modelsArrays, modelsAreFeatures = [], dataset = 'dataset3'):
+    total = 0
+    amountOfModels = len(modelsArrays)
+    results = np.zeros((37,1 + amountOfModels + amountOfModels * amountOfModels)
+    imagesToTest = [None]*(len(modelsArrays) + 1)
+
+    for letter in letters:
+        label_index = get_label_index(letters, letter)
+        for filename in os.listdir(dataset + '/validation' + letter):
+            imagesToTest[0] = loadImageFromPath('dataset3/validation/' + letter + '/' + filename)
+            for i in range(len(modelsArrays)):
+                imagesToTest[i + 1] = generate_adversarial(modelsArrays[i], imagesToTest[0], tf.one_hot(label_index, 36), 0.2, True)
+            for i in range(len(modelsArrays)):
+                #the basic image on each model
+                if modelsAreFeatures[i] == True:
+                    if get_label(letters, modelsArrays[i].predict(imagesToTest[0])[0])[0] == letter:
+                        results[label_index, i*len(modelsArrays)] += 1
+                        results[-1, i*len(modelsArrays)] += 1
+                else:
+                    if get_label(letters, modelsArrays[i].predict(imagesToTest[0]))[0] == letter:
+                        results[label_index,i*len(modelsArrays)] += 1
+                        results[-1, i*len(modelsArrays)] += 1
+                #iterate trough adversarial samples for each model
+                for j in range(len(modelsArrays)):
+                    if modelsAreFeatures[i] == True:
+                        if get_label(letters, modelsArrays[i].predict(imagesToTest[j + 1])[0])[0] == letter:
+                            results[label_index, i*len(modelsArrays) + 1 + j] += 1
+                            results[-1, i*len(modelsArrays) + 1 + j] += 1
+                    else:
+                        if get_label(letters, modelsArrays[i].predict(imagesToTest[j + 1]))[0] == letter:
+                            results[label_index,i*len(modelsArrays) + 1 + j] += 1
+                            results[-1, i*len(modelsArrays) + 1 + j] += 1
+
+            #Increment the counter for each letter
+            results[label_index,0] += 1
+            total += 1
+            if total % 250 == 0 :
+                print("Current ===== ", total)
+
+        #divide succes counts with total count of letter
+        results[label_index, 1:] = results[label_index, 1:] / results[label_index, 0]
+
+    results[-1, 1:] = results[-1, 1:] / results[-1, 0]
 
 
 def createResultsForModels(trained_model, trained_model_features):
