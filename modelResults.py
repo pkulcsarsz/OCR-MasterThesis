@@ -144,16 +144,16 @@ def createResultsForModels(trained_model, trained_model_features, trained_model_
             
             if (get_label(letters, label_f2)[0] == letter):
                 succ_f2 = succ_f2 + 1
-                results[label_index,5] += 1
+                results[label_index,9] += 1
             if (get_label(letters, label_f2_adv)[0] == letter):
                 succ_f2_adv = succ_f2_adv + 1
-                results[label_index,6] += 1
+                results[label_index,10] += 1
             if (get_label(letters, label_f2_adv_f)[0] == letter):
                 succ_f2_adv_f = succ_f2_adv_f + 1
-                results[label_index,7] += 1
+                results[label_index,11] += 1
             if (get_label(letters, label_f2_adv_f2)[0] == letter):
                 succ_f2_adv_f2 = succ_f2_adv_f2 + 1
-                results[label_index,8] += 1
+                results[label_index,12] += 1
 
             total += 1
             results[label_index,0] += 1
@@ -178,3 +178,5 @@ def createResultsForModels(trained_model, trained_model_features, trained_model_
     results[36,12] = succ_f2_adv_f2/total
 
     print("FINISHED")
+
+    return results
