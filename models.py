@@ -203,6 +203,47 @@ def mLeNet2(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, 
     return model
 
 
+def mLeNetDefault(input_shape, num_classes, steps_per_epoch, epochs, use_cache=False, dataset='dataset1'):
+    model_name = 'LeNetDefault'
+    helpers.createFoldersForModel(model_name, dataset)
+    print("===================== " + model_name + " model ====================")
+    if existsModelCache(model_name, dataset) and use_cache:
+        model = loadModel(model_name, dataset)
+        model.compile(loss='categorical_crossentropy',
+                      optimizer='rmsprop', metrics=['accuracy'])
+        evaluateModel(model, dataset, input_shape, steps_per_epoch, epochs)
+        return model
+
+    model = Sequential()
+    # First convolution Layer
+    model.add(Conv2D(6, (5, 5), input_shape=input_shape)
+
+    model.add(AveragePooling2D(pool_size=(2,2)))
+
+    model.add(Conv2D(16, (5, 5)))
+
+    model.add(AveragePooling2D(pool_size=(2, 2)))  # Second Convolution Layer
+
+    model.add(Flatten())
+    model.add(Dense(120))
+    model.add(Dense(84))
+
+    model.add(Dense(num_classes))
+    model.add(Activation('softmax'))
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='rmsprop', metrics=['accuracy'])
+
+    [history, time_taken] = fitModel(
+        model, dataset, input_shape, steps_per_epoch, epochs, False)
+
+    if use_cache:
+        saveModel(model, model_name, dataset)
+
+    createAndSaveCurves(history, model_name, dataset)
+
+    return model
+
+
 def fitModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics):
     [training_filenames, GT_training] = load_image_names_and_labels(dataset, 'train', addCharacteristics)
     [validation_filenames, GT_validation] = load_image_names_and_labels(dataset, 'validation', addCharacteristics)
