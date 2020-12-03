@@ -1,5 +1,5 @@
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Dense, Activation, Conv2D, Flatten, MaxPooling2D, Dropout, GlobalAveragePooling2D
+from tensorflow.keras.layers import Dense, Activation, Conv2D, Flatten, MaxPooling2D, Dropout, GlobalAveragePooling2D, AveragePooling2D
 from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -231,7 +231,7 @@ def mLeNetDefault(input_shape, num_classes, steps_per_epoch, epochs, use_cache=F
     model.add(Dense(num_classes))
     model.add(Activation('softmax'))
     model.compile(loss='categorical_crossentropy',
-                  optimizer='rmsprop', metrics=['accuracy'])
+                    optimizer='rmsprop', metrics=['accuracy'])
 
     [history, time_taken] = fitModel(
         model, dataset, input_shape, steps_per_epoch, epochs, False)
