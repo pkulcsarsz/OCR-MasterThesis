@@ -336,7 +336,7 @@ def fitModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics
 
 
 
-def evaluateModel(model, dataset, input_shape, steps_per_epoch, epochs, addCharacteristics = False):
+def evaluateModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics = False):
     # test_datagen = ImageDataGenerator(
     #     featurewise_center=True, featurewise_std_normalization=True, rescale=1. / 255)
     # validation_generator = test_datagen.flow_from_directory(
