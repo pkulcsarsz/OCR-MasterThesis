@@ -337,21 +337,19 @@ def fitModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics
 
 
 def evaluateModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics = False):
-    # test_datagen = ImageDataGenerator(
-    #     featurewise_center=True, featurewise_std_normalization=True, rescale=1. / 255)
-    # validation_generator = test_datagen.flow_from_directory(
-    #     getValidationDatasetPath(dataset),
-    #     target_size=(input_shape[0], input_shape[1]),
-    #     batch_size=steps_per_epoch,
-    #     class_mode='categorical')
     [validation_filenames, GT_validation] = load_image_names_and_labels(dataset, 'validation', addCharacteristics)
     my_validation_batch_generator = CustomGenerator(validation_filenames, GT_validation, batch_size)
 
     print("================= Evaluating the model =================")
     scores = model.evaluate(my_validation_batch_generator)
     print(scores)
-    print("%s: %.2f" % (model.metrics_names[0], scores[0]))
-    print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
+    if addCharacteristics:
+        print("%s: %.2f" % (model.metrics_names[2], scores[2]))
+        print("%s: %.2f%%" % (model.metrics_names[3], scores[3]*100))
+        print("%s: %.2f%%" % (model.metrics_names[4], scores[4]))
+    else:
+        print("%s: %.2f" % (model.metrics_names[0], scores[0]))
+        print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
     
 def featuresLossFunction(y_true, y_pred):
     k = 36 # number of classes
