@@ -349,6 +349,7 @@ def evaluateModel(model, dataset, input_shape, batch_size, epochs, addCharacteri
 
     print("================= Evaluating the model =================")
     scores = model.evaluate(my_validation_batch_generator)
+    print(scores)
     print("%s: %.2f" % (model.metrics_names[0], scores[0]))
     print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
     
