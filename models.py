@@ -216,8 +216,8 @@ def mLeNetDefault(input_shape, num_classes, steps_per_epoch, epochs, use_cache=F
 
     model = getDefaultModel(input_shape)
 
-    model.add(Dense(num_classes))
-    model.add(Activation('softmax'))
+    model.add(Dense(num_classes, activation='softmax'))
+    # model.add(Activation('softmax'))
     model.compile(loss='categorical_crossentropy',
                     optimizer='rmsprop', metrics=['accuracy'])
 
@@ -243,10 +243,10 @@ def mLeNetDefault_Features(input_shape, num_classes, steps_per_epoch, epochs, us
         return model
 
     model = getDefaultModel(input_shape)
-    flat1 = Flatten()(model.layers[-1].output)
+    # flat1 = Flatten()(model.layers[-1].output)
 
-    dense1 = Dense(units=256, activation="relu")(flat1)
-    classifierOutput = Dense(num_classes, activation='softmax', name='classifierOutput')(dense1)
+    # dense1 = Dense(units=256, activation="relu")(flat1)
+    classifierOutput = Dense(num_classes, activation='softmax', name='classifierOutput')(model.layers[-1].output)
 
     featuresOutput = Flatten(name='featuresOutput')(model.layers[-1].output)
 
