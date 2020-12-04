@@ -248,6 +248,8 @@ def fitModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics
     my_training_batch_generator = CustomGenerator(training_filenames, GT_training, batch_size)
     my_validation_batch_generator = CustomGenerator(validation_filenames, GT_validation, batch_size)
 
+    earlyStoppingCallback = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=5)
+
     start = time.time()
     history = model.fit(
         my_training_batch_generator,
@@ -255,7 +257,8 @@ def fitModel(model, dataset, input_shape, batch_size, epochs, addCharacteristics
         epochs=epochs,
         verbose=1,
         validation_data=my_validation_batch_generator,
-        validation_steps=len(validation_filenames) / batch_size)
+        validation_steps=len(validation_filenames) / batch_size,
+        callbacks=[earlyStoppingCallback])
 
     return [history, time.time() - start]
 
