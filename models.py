@@ -128,7 +128,8 @@ def mLeNetDefault(input_shape, num_classes, steps_per_epoch, epochs, use_cache=F
         return model
 
     model = getDefaultModel(input_shape)
-
+    model.add(Dense(120))
+    model.add(Dense(84))
     model.add(Dense(num_classes, activation='softmax'))
     # model.add(Activation('softmax'))
     model.compile(loss='categorical_crossentropy',
@@ -160,7 +161,9 @@ def mLeNetDefault_Features(input_shape, num_classes, steps_per_epoch, epochs, us
         return model
 
     model = getDefaultModel(input_shape)
-    classifierOutput = Dense(num_classes, activation='softmax', name='classifierOutput')(model.layers[-1].output)
+    dense1 = Dense(120)(model.layers[-1].output)
+    dense2 = Dense(84)(dense1)
+    classifierOutput = Dense(num_classes, activation='softmax', name='classifierOutput')(dense2)
     featuresOutput = Flatten(name='featuresOutput')(model.layers[-1].output)
     # define new model
     model = Model(inputs=model.inputs, outputs=[classifierOutput, featuresOutput])
@@ -193,8 +196,10 @@ def mLeNetDefault_Features_Dense(input_shape, num_classes, steps_per_epoch, epoc
         return model
 
     model = getDefaultModel(input_shape)
-    dense1 = Dense(units=64, activation="relu")(model.layers[-1].output)
-    classifierOutput = Dense(num_classes, activation='softmax', name='classifierOutput')(dense1)
+    dense1 = Dense(120)(model.layers[-1].output)
+    dense2 = Dense(84)(dense1)
+    dense3 = Dense(units=64, activation="relu")(dense2)
+    classifierOutput = Dense(num_classes, activation='softmax', name='classifierOutput')(dense3)
     featuresOutput = Flatten(name='featuresOutput')(model.layers[-1].output)
     # define new model
     model = Model(inputs=model.inputs, outputs=[classifierOutput, featuresOutput])
@@ -218,8 +223,6 @@ def getDefaultModel(input_shape):
     model.add(Conv2D(16, (5, 5)))
     model.add(AveragePooling2D(pool_size=(2, 2)))
     model.add(Flatten())
-    model.add(Dense(120))
-    model.add(Dense(84))
     return model
 
 def getDefaultEnhancedModel(input_shape):
