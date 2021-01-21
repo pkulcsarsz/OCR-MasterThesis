@@ -97,7 +97,6 @@ def mLeNetEnhanced(input_shape, num_classes, steps_per_epoch, epochs, use_cache=
         return model
     
     model = getDefaultEnhancedModel(input_shape)
-    model.add(Flatten())
     # model.add(Dense(256, activation="relu"))
 
     model.add(Dense(num_classes))
