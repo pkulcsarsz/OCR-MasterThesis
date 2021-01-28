@@ -26,3 +26,9 @@ def createFoldersForModel(model_name, dataset):
     results_path = 'results/' + model_name + '/' + dataset
     if not path.exists(results_path):
         makedirs(results_path)
+
+def checkIfCacheExistsForModel(model_name, dataset):
+    return path.exists('cache/' + dataset + '/' + model_name + '.h5') and path.exists('cache/' + dataset + '/' + model_name + '.json')
+
+def checkFileExists(fileToTestPath):
+    return path.exists(fileToTestPath)

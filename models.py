@@ -8,7 +8,7 @@ import tensorflow.keras.backend as K
 import helpers
 import time
 from modelsHelpers import saveModel, loadModel, existsModelCache, createAndSaveCurves, getTrainDatasetPath, getValidationDatasetPath, createAndSaveCurvesFeatures
-from customDataGenerator import CustomGenerator
+from dataGenerator import CustomGenerator
 from data import load_image_names_and_labels
 import numpy as np
 
