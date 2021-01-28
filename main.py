@@ -1,6 +1,7 @@
 import models
 import sys, getopt
 import helpers
+import data
 
 # Define basic variables
 num_classes = 36
@@ -14,21 +15,22 @@ selectedModel = ""
 imagePathToTest = ""
 
 
-opts, args = getopt.getopt(sys.argv[1:], 'm:d:e:s:c')
+opts, args = getopt.getopt(sys.argv[1:], 'm:d:e:s:c:f:x')
 for opt, arg in opts:
   if opt == '-m':
     selectedModel = arg
   elif opt == '-d':
     dataset = arg
   elif opt == '-e':
-    epochs = arg
+    epochs = int(arg)
   elif opt == '-s':
-    steps_per_epoch = arg
+    steps_per_epoch = int(arg)
   elif opt == '-c':
     if arg == "true":
       useCache = True
   elif opt == '-f':
     imagePathToTest = arg
+
 
 if(dataset != 'dataset1' and dataset != 'dataset2' and dataset != 'dataset3'):
   print("Dataset is not recognized")
@@ -55,7 +57,7 @@ if selectedModel == 'LeNetDefaultFeaturesDense':
 
 
 if imagePathToTest != "":
-  if(helpers.checkFileExists(fileToTest) == False):
+  if(helpers.checkFileExists(imagePathToTest) == False):
     print("File to test is not found.")
     raise NameError("File to test is not found.")
 
@@ -63,7 +65,7 @@ if imagePathToTest != "":
     print("Cache for the model not found. Please run training before using this command.")
     raise NameError("Cache for the model not found. Please run training before using this command.")
 
-  imageToTest = loadImageFromPath(imagePathToTest)
+  imageToTest = data.loadImageFromPath(imagePathToTest)
   label = model.predict(imageToTest)
   print(label)
 
