@@ -19,7 +19,7 @@ def loadImageFromPath(path):
   return image
 
 
-def createResultsForModels(trained_model, trained_model_features, trained_model_features2):
+def createResultsForModels(trained_model1, trained_model2):
     succ = 0
     succ_adv = 0
     succ_adv_f = 0
@@ -36,16 +36,16 @@ def createResultsForModels(trained_model, trained_model_features, trained_model_
             # Load the image
             imToTest = loadImageFromPath('dataset3/validation/' + letter + '/' + filename)
             # Generate adversarial sample 
-            imToTest_adv = generate_adversarial(trained_model, imToTest, tf.one_hot(label_index, 36), 0.2, False)        
-            imToTest_adv_features = generate_adversarial(trained_model_features, imToTest, tf.one_hot(label_index, 36), 0.2, True)
+            imToTest_adv = generate_adversarial(trained_model1, imToTest, tf.one_hot(label_index, 36), 0.2, False)        
+            imToTest_adv_features = generate_adversarial(trained_model2, imToTest, tf.one_hot(label_index, 36), 0.2, True)
             # Get perdictions of the original and adversarial sample for basic model
-            label = trained_model.predict(imToTest)
-            label_adv = trained_model.predict(imToTest_adv)
-            label_adv_f = trained_model.predict(imToTest_adv_features)
+            label = trained_model1.predict(imToTest)
+            label_adv = trained_model1.predict(imToTest_adv)
+            label_adv_f = trained_model1.predict(imToTest_adv_features)
             # Get perdictions of the original and adversarial sample for features model
-            label_f = trained_model_features.predict(imToTest)
-            label_f_adv = trained_model_features.predict(imToTest_adv)
-            label_f_adv_f = trained_model_features.predict(imToTest_adv_features)
+            label_f = trained_model2.predict(imToTest)
+            label_f_adv = trained_model2.predict(imToTest_adv)
+            label_f_adv_f = trained_model2.predict(imToTest_adv_features)
             # Get label for classification from features labels
             label_f = label_f[0]
             label_f_adv = label_f_adv[0]
@@ -90,3 +90,8 @@ def createResultsForModels(trained_model, trained_model_features, trained_model_
     print("FINISHED")
 
     return results
+
+
+def compareModelsAndSaveToCsv(model1, mnodel2, filename):
+    comparison = createResultsForModels(model1, model2)
+    np.savetxt(filename, comparison, delimiter=",")
