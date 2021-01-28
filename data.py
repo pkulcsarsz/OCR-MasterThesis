@@ -16,7 +16,7 @@ def load_image_names_and_labels(dataset = 'dataset3', phase = 'train', isFeature
     image_names = []
     image_labels = []
 
-    characteristics = np.genfromtxt('characteristics2.csv', delimiter=',')
+    characteristics = np.genfromtxt('characteristics.csv', delimiter=',')
 
     path = dataset + '/' + phase + '/'
     for letter in os.listdir(path):
